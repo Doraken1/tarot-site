@@ -1,5 +1,5 @@
 """
-Создаёт все файлы проекта Таро. Исправлены артефакты фона (швы).
+Создаёт все файлы проекта Таро. Картинка карт опущена ниже.
 Запуск: python setup.py
 """
 import os
@@ -471,7 +471,7 @@ body {
 }
 
 /* =========================================
-   МНОГОСЛОЙНЫЙ ФОН (ИСПРАВЛЕНЫ АРТЕФАКТЫ)
+   МНОГОСЛОЙНЫЙ ФОН
    ========================================= */
 .bg-layer {
     position: fixed;
@@ -479,7 +479,7 @@ body {
     z-index: -1;
     pointer-events: none;
     background-color: #0d0517;
-    isolation: isolate; /* Изолирует режимы наложения, убирает баги */
+    isolation: isolate;
 }
 
 .bg-mandala-1 {
@@ -498,7 +498,6 @@ body {
     mix-blend-mode: color-dodge; 
 }
 
-/* Третья картинка (дым) теперь ЕДИНЫМ СЛОЕМ, без 4 углов */
 .bg-smoke {
     position: absolute;
     inset: 0;
@@ -568,13 +567,13 @@ button:hover {
 }
 
 /* =========================================
-   БЛОК С КАРТИНКОЙ (КАРТЫ)
+   БЛОК С КАРТИНКОЙ (КАРТЫ ОПУЩЕНЫ НИЖЕ)
    ========================================= */
 .hero-images-wrapper {
     position: relative;
     width: 100%;
     max-width: 400px; 
-    margin: 40px auto 0; 
+    margin: 100px auto 40px; /* <-- Отступ сверху увеличен до 100px, чтобы опустить картинку */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -584,7 +583,6 @@ button:hover {
     width: 60%; 
     max-width: 220px;
     filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
-    /* Картинка статична */
 }
 
 /* =========================================
@@ -687,7 +685,7 @@ button:hover {
 @media (max-width: 640px) {
     h1 { font-size: 1.7rem; }
     form { flex-direction: column; }
-    .hero-images-wrapper { max-width: 300px; }
+    .hero-images-wrapper { max-width: 300px; margin-top: 60px; } /* Отступ для мобилок */
     .tarot-card { width: 150px; min-height: 230px; }
     .card-symbol { font-size: 2.4rem; }
     .cards-row { gap: 10px; min-height: auto; }
@@ -988,6 +986,6 @@ for path, content in FILES.items():
     print(f"[OK] {path}")
 
 print("\n========================================")
-print("✅ Все файлы обновлены (швы фона убраны).")
+print("✅ Все файлы обновлены (картинка опущена ниже).")
 print("Запускай: python setup.py -> python app.py")
 print("========================================")
