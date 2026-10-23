@@ -13,7 +13,7 @@ body {
 }
 
 /* =========================================
-   МНОГОСЛОЙНЫЙ ФОН (ИСПРАВЛЕНЫ АРТЕФАКТЫ)
+   МНОГОСЛОЙНЫЙ ФОН
    ========================================= */
 .bg-layer {
     position: fixed;
@@ -21,7 +21,7 @@ body {
     z-index: -1;
     pointer-events: none;
     background-color: #0d0517;
-    isolation: isolate; /* Изолирует режимы наложения, убирает баги */
+    isolation: isolate;
 }
 
 .bg-mandala-1 {
@@ -40,7 +40,6 @@ body {
     mix-blend-mode: color-dodge; 
 }
 
-/* Третья картинка (дым) теперь ЕДИНЫМ СЛОЕМ, без 4 углов */
 .bg-smoke {
     position: absolute;
     inset: 0;
@@ -116,7 +115,7 @@ button:hover {
     position: relative;
     width: 100%;
     max-width: 400px; 
-    margin: 100px auto 40px; 
+    margin: 160px auto 40px; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -126,7 +125,6 @@ button:hover {
     width: 60%; 
     max-width: 220px;
     filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
-    /* Картинка статична */
 }
 
 /* =========================================
@@ -229,7 +227,7 @@ button:hover {
 @media (max-width: 640px) {
     h1 { font-size: 1.7rem; }
     form { flex-direction: column; }
-    .hero-images-wrapper { max-width: 300px; }
+    .hero-images-wrapper { max-width: 300px; margin-top: 120px; } 
     .tarot-card { width: 150px; min-height: 230px; }
     .card-symbol { font-size: 2.4rem; }
     .cards-row { gap: 10px; min-height: auto; }
