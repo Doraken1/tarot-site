@@ -1,0 +1,195 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    min-height: 100vh;
+    background: radial-gradient(ellipse at top, #2a1147 0%, #0d0517 70%);
+    color: #f3e9c7;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+/* ===== Canvas для частиц ===== */
+#particlesCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.container { max-width: 900px; width: 100%; }
+.screen { text-align: center; animation: fadeIn 0.5s ease; }
+
+h1 {
+    font-size: 2.4rem;
+    color: #e6c869;
+    text-shadow: 0 0 20px rgba(230, 200, 105, 0.4);
+    margin-bottom: 10px;
+}
+.subtitle { color: #b8a9d4; margin-bottom: 30px; font-style: italic; }
+
+form { display: flex; gap: 10px; max-width: 600px; margin: 0 auto; }
+
+#questionInput {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1rem;
+    border: 2px solid #4a2a75;
+    background: #1a0f2e;
+    color: #f3e9c7;
+    border-radius: 10px;
+    outline: none;
+    transition: border 0.2s;
+}
+#questionInput:focus { border-color: #e6c869; }
+
+button {
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #7a3eb8, #c986e8);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(201, 134, 232, 0.4);
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    margin: 40px auto 20px;
+    border: 5px solid #4a2a75;
+    border-top-color: #e6c869;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.user-question {
+    font-size: 1.1rem;
+    color: #b8a9d4;
+    margin-bottom: 26px;
+}
+.user-question span { color: #e6c869; font-style: italic; }
+
+.cards-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    min-height: 280px;
+}
+
+.tarot-card {
+    width: 190px;
+    min-height: 280px;
+    background: linear-gradient(160deg, #fdf6e3 0%, #e8dcc0 100%);
+    border: 3px solid #e6c869;
+    border-radius: 12px;
+    padding: 16px 12px;
+    color: #2a1147;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 8px 30px rgba(230, 200, 105, 0.25);
+    transform-style: preserve-3d;
+}
+
+.card-header {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #7a3eb8;
+    letter-spacing: 2px;
+}
+.card-symbol { font-size: 3.2rem; margin: 10px 0; }
+.card-name {
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    color: #2a1147;
+    margin-bottom: 8px;
+}
+.card-desc {
+    font-size: 0.82rem;
+    text-align: center;
+    color: #4a2a75;
+    font-style: italic;
+}
+
+.readings {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.card-reading {
+    background: rgba(30, 15, 55, 0.75);
+    border: 1px solid #4a2a75;
+    border-left: 4px solid #e6c869;
+    border-radius: 12px;
+    padding: 18px 22px;
+    text-align: left;
+    line-height: 1.7;
+    font-size: 1.02rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.reading-position {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #e6c869;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.overall {
+    background: linear-gradient(135deg,
+                rgba(60, 30, 100, 0.85),
+                rgba(30, 15, 55, 0.85));
+    border: 2px solid #e6c869;
+    border-radius: 14px;
+    padding: 24px 26px;
+    text-align: left;
+    line-height: 1.75;
+    font-size: 1.05rem;
+    box-shadow: 0 10px 40px rgba(230, 200, 105, 0.2);
+    margin-top: 10px;
+}
+
+.overall h2 {
+    color: #e6c869;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.reset {
+    background: transparent;
+    border: 2px solid #7a3eb8;
+    color: #c986e8;
+    margin-top: 10px;
+}
+.reset:hover { background: #7a3eb8; color: #fff; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 640px) {
+    h1 { font-size: 1.7rem; }
+    form { flex-direction: column; }
+    .tarot-card { width: 150px; min-height: 230px; }
+    .card-symbol { font-size: 2.4rem; }
+    .cards-row { gap: 10px; min-height: auto; }
+}
