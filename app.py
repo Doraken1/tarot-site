@@ -15,8 +15,8 @@ def reading():
     data = request.get_json(silent=True) or {}
     question = (data.get("question") or "").strip()
 
-    if not question:
-        return jsonify({"error": "Введите вопрос"}), 400
+    if not question or len(question) < 2 or not any(c.isalpha() for c in question):
+        return jsonify({"error": "Пожалуйста, напишите ваш вопрос текстом"}), 400
     if len(question) > 500:
         question = question[:500]
 

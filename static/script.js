@@ -4,15 +4,12 @@ const questionScreen = document.getElementById('questionScreen');
 const loading = document.getElementById('loading');
 const resultScreen = document.getElementById('resultScreen');
 const userQuestion = document.getElementById('userQuestion');
-const cardsRow = document.getElementById('cards');
+const cardsGrid = document.getElementById('cardsGrid');
 const readingsList = document.getElementById('readings');
 const resetBtn = document.getElementById('resetBtn');
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
-/* ============================================================
-   PARTICLE SYSTEM
-   ============================================================ */
 const canvas = document.getElementById('particlesCanvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
@@ -57,8 +54,7 @@ function spawnBurst(x, y, count = 45) {
 
 function drawStar(cx, cy, spikes, outerR, innerR, rotation) {
     let rot = rotation;
-    let x = cx;
-    let y = cy;
+    let x = cx, y = cy;
     const step = Math.PI / spikes;
     ctx.beginPath();
     ctx.moveTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR);
@@ -78,28 +74,21 @@ function drawStar(cx, cy, spikes, outerR, innerR, rotation) {
 
 function animateParticles() {
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
     for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
+        p.x += p.vx; p.y += p.vy;
         p.vy += p.gravity;
-        p.vx *= p.friction;
-        p.vy *= p.friction;
+        p.vx *= p.friction; p.vy *= p.friction;
         p.rotation += p.rotSpeed;
         p.life -= p.decay;
-
         if (p.life <= 0 || p.y > window.innerHeight + 80) {
-            particles.splice(i, 1);
-            continue;
+            particles.splice(i, 1); continue;
         }
-
         ctx.globalAlpha = Math.max(0, p.life);
         ctx.fillStyle = p.color;
         ctx.shadowBlur = 10;
         ctx.shadowColor = p.color;
         const size = p.size * p.life;
-
         if (p.isStar) {
             drawStar(p.x, p.y, 4, size * 1.6, size * 0.6, p.rotation);
         } else {
@@ -108,10 +97,8 @@ function animateParticles() {
             ctx.fill();
         }
     }
-
     ctx.globalAlpha = 1;
     ctx.shadowBlur = 0;
-
     if (particles.length > 0) {
         animationId = requestAnimationFrame(animateParticles);
     } else {
@@ -125,31 +112,28 @@ function getElementCenter(el) {
     return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
 }
 
-/* ============================================================
-   DOM HELPERS
-   ============================================================ */
-function makeCardEl(card) {
-    const el = document.createElement('div');
-    el.className = 'tarot-card';
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(-30px) rotateY(90deg)';
-    el.innerHTML =
+function makeCardBlock(card, readingText) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'card-block';
+    wrapper.style.opacity = '0';
+    wrapper.style.transform = 'translateY(-20px)';
+    
+    const cardEl = document.createElement('div');
+    cardEl.className = 'tarot-card';
+    cardEl.innerHTML =
         '<div class="card-header">' + card.num + '</div>' +
         '<div class="card-symbol">' + card.symbol + '</div>' +
         '<div class="card-name">' + card.name + '</div>' +
         '<div class="card-desc">' + card.description + '</div>';
-    return el;
-}
+        
+    const textEl = document.createElement('div');
+    textEl.className = 'card-mini-reading';
+    textEl.innerText = readingText;
 
-function makeReadingEl(reading, card) {
-    const el = document.createElement('div');
-    el.className = 'card-reading';
-    el.style.opacity = '0';
-    el.innerHTML =
-        '<div class="reading-position">' + reading.position +
-        ' — «' + card.name + '»</div>' +
-        '<div class="reading-text">' + reading.text + '</div>';
-    return el;
+    wrapper.appendChild(cardEl);
+    wrapper.appendChild(textEl);
+    
+    return wrapper;
 }
 
 function makeOverallEl(text) {
@@ -157,16 +141,13 @@ function makeOverallEl(text) {
     el.className = 'overall';
     el.style.opacity = '0';
     el.innerHTML =
-        '<h2>✨ Общий расклад</h2>' +
+        '<h2>✨ Итоговый прогноз</h2>' +
         '<div class="reading-text">' + text + '</div>';
     return el;
 }
 
-/* ============================================================
-   REVEAL
-   ============================================================ */
 async function revealAll(data) {
-    cardsRow.innerHTML = '';
+    cardsGrid.innerHTML = '';
     readingsList.innerHTML = '';
     particles = [];
 
@@ -174,35 +155,25 @@ async function revealAll(data) {
         const card = data.cards[i];
         const reading = data.readings[i];
 
-        const cardEl = makeCardEl(card);
-        cardsRow.appendChild(cardEl);
-        await delay(20);
+        const blockEl = makeCardBlock(card, reading.text);
+        cardsGrid.appendChild(blockEl);
+        
+        await delay(50);
 
-        const center = getElementCenter(cardEl);
-        spawnBurst(center.x, center.y, 55);
+        const cardVisual = blockEl.querySelector('.tarot-card');
+        const center = getElementCenter(cardVisual);
 
-        cardEl.style.transition = 'opacity 0.5s ease, transform 0.75s cubic-bezier(0.2, 0.8, 0.3, 1.2)';
-        cardEl.style.opacity = '1';
-        cardEl.style.transform = 'translateY(0) rotateY(0)';
-
+        blockEl.style.transition = 'opacity 0.5s ease, transform 0.6s ease-out';
+        blockEl.style.opacity = '1';
+        blockEl.style.transform = 'translateY(0)';
+        
+        spawnBurst(center.x, center.y, 45);
+        
         setTimeout(() => {
-            const c = getElementCenter(cardEl);
-            spawnBurst(c.x, c.y, 25);
-        }, 380);
+            spawnBurst(center.x, center.y, 20);
+        }, 300);
 
-        await delay(750);
-
-        const c2 = getElementCenter(cardEl);
-        spawnBurst(c2.x, c2.y, 18);
-
-        const readingEl = makeReadingEl(reading, card);
-        readingsList.appendChild(readingEl);
-        readingEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        await delay(20);
-        readingEl.style.transition = 'opacity 0.8s ease';
-        readingEl.style.opacity = '1';
-
-        await delay(1100);
+        await delay(800);
     }
 
     const overallEl = makeOverallEl(data.overall);
@@ -214,7 +185,7 @@ async function revealAll(data) {
 
     const oc = getElementCenter(overallEl);
     setTimeout(() => {
-        spawnBurst(oc.x, oc.y - 30, 90);
+        spawnBurst(oc.x, oc.y - 30, 80);
         setTimeout(() => spawnBurst(oc.x - 120, oc.y, 40), 180);
         setTimeout(() => spawnBurst(oc.x + 120, oc.y, 40), 360);
     }, 250);
@@ -223,13 +194,12 @@ async function revealAll(data) {
     overallEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-/* ============================================================
-   SUBMIT / RESET
-   ============================================================ */
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const question = questionInput.value.trim();
-    if (!question) {
+
+    if (!question || question.length < 2 || !/[а-яА-Яa-zA-Z]/.test(question)) {
+        alert('Пожалуйста, напишите ваш вопрос текстом');
         questionInput.focus();
         return;
     }
@@ -263,7 +233,7 @@ form.addEventListener('submit', async (e) => {
 resetBtn.addEventListener('click', () => {
     resultScreen.style.display = 'none';
     questionScreen.style.display = 'block';
-    cardsRow.innerHTML = '';
+    cardsGrid.innerHTML = '';
     readingsList.innerHTML = '';
     particles = [];
     questionInput.value = '';
