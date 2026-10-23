@@ -1,5 +1,5 @@
 """
-Создаёт все файлы проекта Таро. Картинка карт опущена ниже.
+Создаёт все файлы проекта Таро. Картинка карт опущена еще ниже.
 Запуск: python setup.py
 """
 import os
@@ -567,13 +567,13 @@ button:hover {
 }
 
 /* =========================================
-   БЛОК С КАРТИНКОЙ (КАРТЫ ОПУЩЕНЫ НИЖЕ)
+   БЛОК С КАРТИНКОЙ (КАРТЫ ОПУЩЕНЫ ЕЩЕ НИЖЕ)
    ========================================= */
 .hero-images-wrapper {
     position: relative;
     width: 100%;
     max-width: 400px; 
-    margin: 100px auto 40px; /* <-- Отступ сверху увеличен до 100px, чтобы опустить картинку */
+    margin: 160px auto 40px; /* <-- Отступ сверху увеличен до 160px */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -685,7 +685,7 @@ button:hover {
 @media (max-width: 640px) {
     h1 { font-size: 1.7rem; }
     form { flex-direction: column; }
-    .hero-images-wrapper { max-width: 300px; margin-top: 60px; } /* Отступ для мобилок */
+    .hero-images-wrapper { max-width: 300px; margin-top: 120px; } /* Отступ для мобилок */
     .tarot-card { width: 150px; min-height: 230px; }
     .card-symbol { font-size: 2.4rem; }
     .cards-row { gap: 10px; min-height: auto; }
@@ -986,6 +986,6 @@ for path, content in FILES.items():
     print(f"[OK] {path}")
 
 print("\n========================================")
-print("✅ Все файлы обновлены (картинка опущена ниже).")
+print("✅ Все файлы обновлены (картинка опущена еще ниже).")
 print("Запускай: python setup.py -> python app.py")
 print("========================================")
