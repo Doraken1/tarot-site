@@ -1,5 +1,5 @@
 """
-Создаёт все файлы проекта Таро. Версия без рамки, только карты PNG, статичные.
+Создаёт все файлы проекта Таро. Исправлены артефакты фона (швы).
 Запуск: python setup.py
 """
 import os
@@ -471,14 +471,17 @@ body {
 }
 
 /* =========================================
-   МНОГОСЛОЙНЫЙ ФОН
+   МНОГОСЛОЙНЫЙ ФОН (ИСПРАВЛЕНЫ АРТЕФАКТЫ)
    ========================================= */
 .bg-layer {
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
+    background-color: #0d0517;
+    isolation: isolate; /* Изолирует режимы наложения, убирает баги */
 }
+
 .bg-mandala-1 {
     position: absolute;
     inset: 0;
@@ -486,6 +489,7 @@ body {
     opacity: 0.1; 
     mix-blend-mode: screen; 
 }
+
 .bg-mandala-2 {
     position: absolute;
     inset: 0;
@@ -493,14 +497,13 @@ body {
     opacity: 0.35;
     mix-blend-mode: color-dodge; 
 }
+
+/* Третья картинка (дым) теперь ЕДИНЫМ СЛОЕМ, без 4 углов */
 .bg-smoke {
     position: absolute;
     inset: 0;
-    background-image: url('/static/img/bg-smoke.jpg'), url('/static/img/bg-smoke.jpg'), url('/static/img/bg-smoke.jpg'), url('/static/img/bg-smoke.jpg');
-    background-position: top left, top right, bottom left, bottom right;
-    background-size: 60% 60%;
-    background-repeat: no-repeat;
-    opacity: 0.5;
+    background: url('/static/img/bg-smoke.jpg') center center / cover no-repeat;
+    opacity: 0.4;
     mix-blend-mode: screen;
 }
 
@@ -985,6 +988,6 @@ for path, content in FILES.items():
     print(f"[OK] {path}")
 
 print("\n========================================")
-print("✅ Все файлы обновлены (Только карты PNG, без рамки).")
+print("✅ Все файлы обновлены (швы фона убраны).")
 print("Запускай: python setup.py -> python app.py")
 print("========================================")
