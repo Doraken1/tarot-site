@@ -1,6 +1,3 @@
-/* ============================================================
-   DOM
-   ============================================================ */
 const form = document.getElementById('questionForm');
 const questionInput = document.getElementById('questionInput');
 const questionScreen = document.getElementById('questionScreen');
@@ -12,7 +9,6 @@ const readingsList = document.getElementById('readings');
 const resetBtn = document.getElementById('resetBtn');
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
-
 
 /* ============================================================
    PARTICLE SYSTEM
@@ -48,7 +44,7 @@ function spawnBurst(x, y, count = 45) {
             gravity: 0.06 + Math.random() * 0.08,
             friction: 0.985,
             life: 1,
-            decay: 0.004 + Math.random() * 0.009,
+            decay: 0.008 + Math.random() * 0.018,
             size: 1.5 + Math.random() * 3.5,
             color: PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)],
             isStar: Math.random() < 0.3,
@@ -129,7 +125,6 @@ function getElementCenter(el) {
     return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
 }
 
-
 /* ============================================================
    DOM HELPERS
    ============================================================ */
@@ -167,47 +162,39 @@ function makeOverallEl(text) {
     return el;
 }
 
-
 /* ============================================================
-   REVEAL — пошаговое открытие карт + частицы
+   REVEAL
    ============================================================ */
 async function revealAll(data) {
     cardsRow.innerHTML = '';
     readingsList.innerHTML = '';
-    particles = [];   // сброс на всякий случай
+    particles = [];
 
     for (let i = 0; i < data.cards.length; i++) {
         const card = data.cards[i];
         const reading = data.readings[i];
 
-        // 1. Карта появляется (пока ещё "рубашкой" — поворот 90°)
         const cardEl = makeCardEl(card);
         cardsRow.appendChild(cardEl);
         await delay(20);
 
         const center = getElementCenter(cardEl);
+        spawnBurst(center.x, center.y, 55);
 
-        // 2. Взрыв частиц — момент появления
-        spawnBurst(center.x, center.y, 255);
-
-        // 3. Запускаем переворот
         cardEl.style.transition = 'opacity 0.5s ease, transform 0.75s cubic-bezier(0.2, 0.8, 0.3, 1.2)';
         cardEl.style.opacity = '1';
         cardEl.style.transform = 'translateY(0) rotateY(0)';
 
-        // 4. Промежуточный искристый "щелчок" в середине переворота
         setTimeout(() => {
             const c = getElementCenter(cardEl);
-            spawnBurst(c.x, c.y, 50);
+            spawnBurst(c.x, c.y, 25);
         }, 380);
 
         await delay(750);
 
-        // 5. Финальный "оседающий" бурст после переворота
         const c2 = getElementCenter(cardEl);
-        spawnBurst(c2.x, c2.y, 40);
+        spawnBurst(c2.x, c2.y, 18);
 
-        // 6. Появление толкования
         const readingEl = makeReadingEl(reading, card);
         readingsList.appendChild(readingEl);
         readingEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -218,7 +205,6 @@ async function revealAll(data) {
         await delay(1100);
     }
 
-    // 7. Общий расклад
     const overallEl = makeOverallEl(data.overall);
     readingsList.appendChild(overallEl);
     overallEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -226,18 +212,16 @@ async function revealAll(data) {
     overallEl.style.transition = 'opacity 1s ease';
     overallEl.style.opacity = '1';
 
-    // 8. Большой праздничный бурст над общим раскладом
     const oc = getElementCenter(overallEl);
     setTimeout(() => {
         spawnBurst(oc.x, oc.y - 30, 90);
-        setTimeout(() => spawnBurst(oc.x - 180, oc.y, 70), 180);
+        setTimeout(() => spawnBurst(oc.x - 120, oc.y, 40), 180);
         setTimeout(() => spawnBurst(oc.x + 120, oc.y, 40), 360);
     }, 250);
 
     await delay(600);
     overallEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-
 
 /* ============================================================
    SUBMIT / RESET

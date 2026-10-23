@@ -3,14 +3,52 @@
 body {
     font-family: 'Georgia', 'Times New Roman', serif;
     min-height: 100vh;
-    background: radial-gradient(ellipse at top, #2a1147 0%, #0d0517 70%);
+    background: #0d0517; 
     color: #f3e9c7;
     display: flex;
     justify-content: center;
     padding: 40px 20px;
+    position: relative;
+    overflow-x: hidden;
 }
 
-/* ===== Canvas для частиц ===== */
+/* =========================================
+   МНОГОСЛОЙНЫЙ ФОН
+   ========================================= */
+.bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+.bg-mandala-1 {
+    position: absolute;
+    inset: 0;
+    background: url('/static/img/bg-mandala-1.jpg') center/cover no-repeat;
+    opacity: 0.1; 
+    mix-blend-mode: screen; 
+}
+.bg-mandala-2 {
+    position: absolute;
+    inset: 0;
+    background: url('/static/img/bg-mandala-2.jpg') center/cover no-repeat;
+    opacity: 0.35;
+    mix-blend-mode: color-dodge; 
+}
+.bg-smoke {
+    position: absolute;
+    inset: 0;
+    background-image: url('/static/img/bg-smoke.jpg'), url('/static/img/bg-smoke.jpg'), url('/static/img/bg-smoke.jpg'), url('/static/img/bg-smoke.jpg');
+    background-position: top left, top right, bottom left, bottom right;
+    background-size: 60% 60%;
+    background-repeat: no-repeat;
+    opacity: 0.5;
+    mix-blend-mode: screen;
+}
+
+/* =========================================
+   ОСНОВНОЙ КОНТЕНТ
+   ========================================= */
 #particlesCanvas {
     position: fixed;
     top: 0;
@@ -21,7 +59,12 @@ body {
     z-index: 100;
 }
 
-.container { max-width: 900px; width: 100%; }
+.container { 
+    max-width: 900px; 
+    width: 100%; 
+    position: relative; 
+    z-index: 1; 
+}
 .screen { text-align: center; animation: fadeIn 0.5s ease; }
 
 h1 {
@@ -39,7 +82,7 @@ form { display: flex; gap: 10px; max-width: 600px; margin: 0 auto; }
     padding: 14px 18px;
     font-size: 1rem;
     border: 2px solid #4a2a75;
-    background: #1a0f2e;
+    background: rgba(26, 15, 46, 0.8);
     color: #f3e9c7;
     border-radius: 10px;
     outline: none;
@@ -63,6 +106,29 @@ button:hover {
     box-shadow: 0 8px 20px rgba(201, 134, 232, 0.4);
 }
 
+/* =========================================
+   БЛОК С КАРТИНКОЙ (КАРТЫ)
+   ========================================= */
+.hero-images-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 400px; 
+    margin: 40px auto 0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-cards {
+    width: 60%; 
+    max-width: 220px;
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
+    /* Картинка статична */
+}
+
+/* =========================================
+   ОСТАЛЬНЫЕ ЭЛЕМЕНТЫ
+   ========================================= */
 .spinner {
     width: 60px;
     height: 60px;
@@ -105,26 +171,10 @@ button:hover {
     transform-style: preserve-3d;
 }
 
-.card-header {
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: #7a3eb8;
-    letter-spacing: 2px;
-}
+.card-header { font-size: 0.85rem; font-weight: bold; color: #7a3eb8; letter-spacing: 2px; }
 .card-symbol { font-size: 3.2rem; margin: 10px 0; }
-.card-name {
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-    color: #2a1147;
-    margin-bottom: 8px;
-}
-.card-desc {
-    font-size: 0.82rem;
-    text-align: center;
-    color: #4a2a75;
-    font-style: italic;
-}
+.card-name { font-size: 1rem; font-weight: bold; text-align: center; color: #2a1147; margin-bottom: 8px; }
+.card-desc { font-size: 0.82rem; text-align: center; color: #4a2a75; font-style: italic; }
 
 .readings {
     display: flex;
@@ -134,7 +184,7 @@ button:hover {
 }
 
 .card-reading {
-    background: rgba(30, 15, 55, 0.75);
+    background: rgba(30, 15, 55, 0.85); 
     border: 1px solid #4a2a75;
     border-left: 4px solid #e6c869;
     border-radius: 12px;
@@ -155,9 +205,7 @@ button:hover {
 }
 
 .overall {
-    background: linear-gradient(135deg,
-                rgba(60, 30, 100, 0.85),
-                rgba(30, 15, 55, 0.85));
+    background: linear-gradient(135deg, rgba(60, 30, 100, 0.9), rgba(30, 15, 55, 0.9));
     border: 2px solid #e6c869;
     border-radius: 14px;
     padding: 24px 26px;
@@ -168,20 +216,9 @@ button:hover {
     margin-top: 10px;
 }
 
-.overall h2 {
-    color: #e6c869;
-    font-size: 1.2rem;
-    margin-bottom: 12px;
-    text-align: center;
-    letter-spacing: 1px;
-}
+.overall h2 { color: #e6c869; font-size: 1.2rem; margin-bottom: 12px; text-align: center; letter-spacing: 1px; }
 
-.reset {
-    background: transparent;
-    border: 2px solid #7a3eb8;
-    color: #c986e8;
-    margin-top: 10px;
-}
+.reset { background: transparent; border: 2px solid #7a3eb8; color: #c986e8; margin-top: 10px; }
 .reset:hover { background: #7a3eb8; color: #fff; }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -189,6 +226,7 @@ button:hover {
 @media (max-width: 640px) {
     h1 { font-size: 1.7rem; }
     form { flex-direction: column; }
+    .hero-images-wrapper { max-width: 300px; }
     .tarot-card { width: 150px; min-height: 230px; }
     .card-symbol { font-size: 2.4rem; }
     .cards-row { gap: 10px; min-height: auto; }

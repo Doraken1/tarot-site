@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+
+    <!-- ФОНОВЫЕ СЛОИ -->
+    <div class="bg-layer">
+        <div class="bg-mandala-1"></div>
+        <div class="bg-mandala-2"></div>
+        <div class="bg-smoke"></div>
+    </div>
+
+    <!-- Canvas для частиц -->
     <canvas id="particlesCanvas" aria-hidden="true"></canvas>
 
     <div class="container">
@@ -14,12 +23,19 @@
         <section id="questionScreen" class="screen">
             <h1>🔮 Задайте вопрос Таро</h1>
             <p class="subtitle">Три карты откроют прошлое, настоящее и будущее</p>
+            
             <form id="questionForm">
                 <input id="questionInput" type="text"
                        placeholder="Например: что ждёт меня в будущем?"
                        maxlength="500" autocomplete="off">
                 <button type="submit">Открыть карты</button>
             </form>
+
+            <!-- БЛОК С КАРТИНКОЙ (Только карты, без рамки) -->
+            <div class="hero-images-wrapper">
+                <img src="{{ url_for('static', filename='img/hero-cards.png') }}" class="hero-cards" alt="Карты Таро">
+            </div>
+
         </section>
 
         <section id="loading" class="screen" style="display:none">
